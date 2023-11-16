@@ -7,6 +7,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
+
+import Controller.HuespedController;
+import Model.Huesped;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
@@ -19,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Timestamp;
 import java.text.Format;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
@@ -205,12 +210,16 @@ public class RegistroHuesped extends JFrame {
 		contentPane.add(lblNumeroReserva);
 		
 		txtNreserva = new JTextField();
+		txtNreserva.setEditable(false);
 		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtNreserva.setBounds(560, 495, 285, 33);
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		contentPane.add(txtNreserva);
+		
+		//Registrando el indice de la ultima reserva
+		txtNreserva.setText(ReservasView.indiceReserva);
 		
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setBounds(560, 170, 289, 2);
@@ -261,6 +270,37 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
 		JLabel labelGuardar = new JLabel("GUARDAR");
+		labelGuardar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//LOGICA ACA
+				if(txtApellido.getText() != null && txtFechaN.getDate() != null && txtNombre.getText() != null && txtTelefono.getText() != null) {
+					HuespedController huespedController = new HuespedController();
+					Huesped huesped = new Huesped(txtNombre.getText(), 
+							txtApellido.getText(), 
+							new Timestamp(txtFechaN.getDate().getTime()),
+							txtNacionalidad.getSelectedItem().toString(),
+							txtTelefono.getText(),
+							Integer.parseInt(txtNreserva.getText()));
+					
+					int indiceHuesped = huespedController.registrarHuesped(huesped);
+					
+					if(indiceHuesped != 0) {
+						JOptionPane.showMessageDialog(null, 
+								"Huesped registrado, con id: " + indiceHuesped +
+								" y la reserva con código: " + ReservasView.indiceReserva,
+								"Huesped registrado con éxito", 
+								JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(null, "El indice: " +indiceHuesped + " de la reserva, no se encuentra registrada.","Indice de reserva incorrecto.",JOptionPane.ERROR_MESSAGE);
+					}
+					
+					
+				}else {
+					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
+				}
+			}
+		});
 		labelGuardar.setHorizontalAlignment(SwingConstants.CENTER);
 		labelGuardar.setForeground(Color.WHITE);
 		labelGuardar.setFont(new Font("Roboto", Font.PLAIN, 18));

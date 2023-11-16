@@ -31,7 +31,17 @@ public class Huesped {
 		this.telefono = telefono;
 		this.idReserva = idReserva;
 	}
-
+	
+	public Huesped(String nombre, String apellido, Timestamp nacimiento, String nacionalidad, String telefono,
+			Integer idReserva) {
+		super();
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.nacimiento = nacimiento;
+		this.nacionalidad = nacionalidad;
+		this.telefono = telefono;
+		this.idReserva = idReserva;
+	}
 
 	public Integer getId() {
 		return id;

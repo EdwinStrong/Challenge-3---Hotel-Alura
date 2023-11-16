@@ -35,16 +35,18 @@ public class HuespedDao {
 			statement.execute();
 			
 			final ResultSet resulSet = statement.getGeneratedKeys();
+			int indiceFinal = 0;
 			
 			try(resulSet){
 				while(resulSet.next()) {
+					indiceFinal = resulSet.getInt(1);
 					System.out.println("Registrado huesped con id: "+resulSet.getInt(1));
 				}
+				return indiceFinal;
 			}
 		}catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		return 1;
 	}
 	
 	public List<Huesped> obtenerHuespedes(){

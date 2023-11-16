@@ -16,7 +16,7 @@ public class HuespedController {
 	
 	HuespedDao huespedDao;
 	
-	public Integer regustrarHuesped(Huesped huesped) {
+	public Integer registrarHuesped(Huesped huesped) {
 		reservaConexion = new ReservaController();
 		
 		if(reservaConexion.buscarPorId(huesped.getIdReserva())) {
@@ -24,9 +24,7 @@ public class HuespedController {
 			huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
 			return huespedDao.registrarHuesped(huesped);
 		}
-		else {
-			//System.out.println("La reservación no existe.");
-		}
+
 		return 0;
 	}
 	

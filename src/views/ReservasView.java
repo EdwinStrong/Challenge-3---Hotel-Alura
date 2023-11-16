@@ -45,6 +45,9 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
+	
+	//Variable estática para el valor de la reserva
+	protected static String indiceReserva = "0";
 
 	/**
 	 * Launch the application.
@@ -354,8 +357,10 @@ public class ReservasView extends JFrame {
 							);
 					
 					//Llenamos los datos
+					indiceReserva = String.valueOf(reservaController.registrarReserva(reserva));
+					
 					JOptionPane.showMessageDialog(null, 
-							"Registrado reserva, con id: "+ reservaController.registrarReserva(reserva),
+							"Registrado reserva, con id: "+ indiceReserva,
 							"Reserva registrada con éxito", 
 							JOptionPane.INFORMATION_MESSAGE);
 					
