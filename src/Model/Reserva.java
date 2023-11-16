@@ -21,7 +21,14 @@ public class Reserva {
 		this.valor = valor;
 		this.formaPago = formaPago;
 	}
-
+	
+	public Reserva(Timestamp fechaEntrada, Timestamp fechaSalida, Double valor, String formaPago) {
+		super();
+		this.fechaEntrada = fechaEntrada;
+		this.fechaSalida = fechaSalida;
+		this.valor = valor;
+		this.formaPago = formaPago;
+	}
 	
 	
 	public Integer getId() {

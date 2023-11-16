@@ -30,16 +30,17 @@ public class ReservaDao {
 			statement.execute();
 			
 			final ResultSet resulSet = statement.getGeneratedKeys();
+			int idReservaRegistrado = 0;
 			
 			try(resulSet){
 				while(resulSet.next()) {
-					System.out.println("Registrado reserva con id: " + resulSet.getInt(1));
+					idReservaRegistrado = resulSet.getInt(1);
 				}
+				return idReservaRegistrado;
 			}
 		}catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		return 1;
 	}
 	
 	public List<Reserva> obtenerReservas(){

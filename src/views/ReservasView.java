@@ -11,19 +11,27 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+
+import Controller.ReservaController;
+import Model.Reserva;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
+import java.time.temporal.ChronoUnit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
+import java.sql.Timestamp;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 @SuppressWarnings("serial")
@@ -262,9 +270,36 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.getCalendarButton().setBounds(267, 1, 21, 31);
 		txtFechaSalida.setBackground(Color.WHITE);
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
+		/***
+		 * Evento para calcular el valor de la estadía.
+		 */
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+				if(!(txtFechaEntrada.getDate() == null)) {
+					System.out.println("La fecha inicio es: "+txtFechaEntrada.getDate()+", la de salida: "+txtFechaSalida.getDate());
+					//Calcular la diferencia en dias.
+					Timestamp fechaInicio = new Timestamp(txtFechaEntrada.getDate().getTime());
+					Timestamp fechaFinal = new Timestamp(txtFechaSalida.getDate().getTime());
+					System.out.println("Fecha entrada: " + fechaInicio);
+					System.out.println("Fecha salida: " + fechaFinal);
+					
+					//Calculamos la diferencia en dias de ambas fechas
+					long diferenciaDias = ChronoUnit.DAYS.between(fechaInicio.toLocalDateTime(), fechaFinal.toLocalDateTime());
+					long precioDiario = 25;
+					float valorReserva = diferenciaDias*precioDiario;
+					
+					if(diferenciaDias>0) {
+						//Enviamos el precio
+						txtValor.setText(String.valueOf(valorReserva));
+						
+					}else {
+						JOptionPane.showMessageDialog(null, "Debe haber 1 dia de estadía.","Error en estadía.",JOptionPane.ERROR_MESSAGE);
+						txtValor.setText("0.00");
+					}
+					
+					System.out.println(diferenciaDias);
+				}
 			}
 		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
@@ -272,7 +307,16 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtFechaSalida);
 
+		
+		//Calcular el precio (a $10 la hora)
 		txtValor = new JTextField();
+		txtValor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Ingresaste: "+txtFechaEntrada.getDate());
+			}
+		});
+		
+		
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
@@ -296,9 +340,30 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
+				if ((ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) && !ReservasView.txtValor.getText().equals("0.00")) {		
+					
+					//Registrar la reserva
+					
+					//Variables
+					ReservaController reservaController = new ReservaController();
+					Reserva reserva = new Reserva(
+							new Timestamp(txtFechaEntrada.getDate().getTime()),//Fecha de entrada
+							new Timestamp(txtFechaSalida.getDate().getTime()), //Fecha de salida
+							Double.parseDouble(txtValor.getText().toString()), //El valor de la estadía
+							ReservasView.txtFormaPago.getSelectedItem().toString() //La forma de pago
+							);
+					
+					//Llenamos los datos
+					JOptionPane.showMessageDialog(null, 
+							"Registrado reserva, con id: "+ reservaController.registrarReserva(reserva),
+							"Reserva registrada con éxito", 
+							JOptionPane.INFORMATION_MESSAGE);
+					
+					
+					//Habilitar la vista del huesped
 					RegistroHuesped registro = new RegistroHuesped();
 					registro.setVisible(true);
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}

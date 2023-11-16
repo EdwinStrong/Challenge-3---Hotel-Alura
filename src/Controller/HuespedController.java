@@ -35,4 +35,5 @@ public class HuespedController {
 		
 		return huespedDao.obtenerHuespedes();
 	}
+	
 }
