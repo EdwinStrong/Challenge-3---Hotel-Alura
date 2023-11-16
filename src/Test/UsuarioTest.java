@@ -1,9 +1,7 @@
 package Test;
 
-import java.sql.Connection;
 
 import Controller.UsuarioController;
-import Factory.ConnectionFactory;
 import Model.Usuario;
 
 public class UsuarioTest {
@@ -32,7 +30,12 @@ public class UsuarioTest {
 		
 		//registrarUsuario(usuarioConexion);
 		
-		obtenerUsuarios(usuarioConexion);
+		//obtenerUsuarios(usuarioConexion);
+		
+		/*Usuario nuevoUsuario = new Usuario("edwin", "Pache12");
+		modificarUsuario(nuevoUsuario, usuarioConexion);*/
+		
+		eliminarUsuario("edwin", usuarioConexion);
 	}
 	
 	public static void registrarUsuario(UsuarioController usuarioConexion) {
@@ -51,4 +54,14 @@ public class UsuarioTest {
 			System.out.println(usuario);
 		});
 	}
+	public static void modificarUsuario(Usuario nuevoUsuario, UsuarioController usuarioConexion) {
+		usuarioConexion = new UsuarioController();
+		
+		System.out.println(usuarioConexion.modificarUsuario(nuevoUsuario.getUsuario(), nuevoUsuario.getPass()));
+	}
+	public static void eliminarUsuario(String usuario, UsuarioController usuarioConexion) {
+		usuarioConexion = new UsuarioController();
+		System.out.println(usuarioConexion.eliminarUsuario(usuario));
+	}	
+	
 }

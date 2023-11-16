@@ -67,4 +67,35 @@ public class UsuarioDao {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public Integer modificarContrasenia(String usuario, String nuevoPass) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("UPDATE USUARIOS SET pass = ?"
+					+ "WHERE usuario=?;");
+			statement.setString(1, nuevoPass);
+			statement.setString(2, usuario);
+			statement.execute();
+			//Obtener las columnas modificadas
+			Integer updateCount = statement.getUpdateCount();
+			
+			return updateCount;
+			
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	public Integer eliminarUsuario(String usuario) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("DELETE FROM USUARIOS WHERE usuario=?;");
+			statement.setString(1, usuario);
+			statement.execute();
+			//Obtener las columnas modificadas
+			Integer updateCount = statement.getUpdateCount();
+			
+			return updateCount;
+			
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 }

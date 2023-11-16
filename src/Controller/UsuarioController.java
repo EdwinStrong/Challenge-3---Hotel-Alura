@@ -2,8 +2,6 @@ package Controller;
 
 import java.util.List;
 
-import javax.security.auth.login.AppConfigurationEntry;
-
 import Dao.UsuarioDao;
 import Factory.ConnectionFactory;
 import Model.Usuario;
@@ -32,5 +30,13 @@ public class UsuarioController {
 	public List<Usuario> obtenerUsuario(){
 		usuarioDao = new UsuarioDao(connectionFactory.recuperaConexion());
 		return usuarioDao.obtenerUsuarios();
+	}
+	public String modificarUsuario(String usuario, String nuevaPass) {
+		usuarioDao = new UsuarioDao(connectionFactory.recuperaConexion());
+		return "Usuario modificado con éxito. Columnas afectadas: "+usuarioDao.modificarContrasenia(usuario, nuevaPass);
+	}
+	public String eliminarUsuario(String usuario) {
+		usuarioDao = new UsuarioDao(connectionFactory.recuperaConexion());
+		return "Usuario eliminado con éxito. Columnas afectadas: "+usuarioDao.eliminarUsuario(usuario);
 	}
 }
