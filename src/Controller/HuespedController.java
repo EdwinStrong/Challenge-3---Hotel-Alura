@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.List;
+
 import Dao.HuespedDao;
 import Factory.ConnectionFactory;
 import Model.Huesped;
@@ -26,5 +28,11 @@ public class HuespedController {
 			//System.out.println("La reservación no existe.");
 		}
 		return 0;
+	}
+	
+	public List<Huesped> obtenerHuepedes(){
+		huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
+		
+		return huespedDao.obtenerHuespedes();
 	}
 }

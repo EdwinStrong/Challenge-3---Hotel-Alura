@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 import Model.Huesped;
 
@@ -40,6 +44,28 @@ public class HuespedDao {
 			throw new RuntimeException(e.getMessage());
 		}
 		return 1;
+	}
+	
+	public List<Huesped> obtenerHuespedes(){
+		Huesped huesped;
+		try(con){
+			List<Huesped> huespedes = new ArrayList<>();
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM HUESPEDES;");
+			
+			statement.execute();
+			
+			final ResultSet resultSet = statement.getResultSet();
+			try(resultSet){
+				while(resultSet.next()) {
+					huesped = new Huesped(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+							resultSet.getTimestamp(4), resultSet.getString(5), resultSet.getString(6), resultSet.getInt(7));
+					huespedes.add(huesped);
+				}
+				return huespedes;
+			}
+		}catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 	
 }
