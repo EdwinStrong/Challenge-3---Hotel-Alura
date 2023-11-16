@@ -35,7 +35,7 @@ public class UsuarioTest {
 		/*Usuario nuevoUsuario = new Usuario("edwin", "Pache12");
 		modificarUsuario(nuevoUsuario, usuarioConexion);*/
 		
-		eliminarUsuario("edwin", usuarioConexion);
+		//eliminarUsuario("edwin", usuarioConexion);
 	}
 	
 	public static void registrarUsuario(UsuarioController usuarioConexion) {
