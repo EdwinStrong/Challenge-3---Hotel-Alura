@@ -1,5 +1,6 @@
 package Controller;
 
+import java.sql.Connection;
 import java.util.List;
 
 import Dao.UsuarioDao;
@@ -38,5 +39,9 @@ public class UsuarioController {
 	public String eliminarUsuario(String usuario) {
 		usuarioDao = new UsuarioDao(connectionFactory.recuperaConexion());
 		return "Usuario eliminado con éxito. Columnas afectadas: "+usuarioDao.eliminarUsuario(usuario);
+	}
+	public Boolean realizarLogin(Usuario usuario) {
+		usuarioDao = new UsuarioDao(connectionFactory.recuperaConexion());
+		return usuarioDao.realizarLogin(usuario);
 	}
 }

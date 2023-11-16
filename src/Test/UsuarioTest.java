@@ -28,6 +28,8 @@ public class UsuarioTest {
 		*/
 		UsuarioController usuarioConexion = null;
 		
+		realizarLogin(usuarioConexion);
+		
 		//registrarUsuario(usuarioConexion);
 		
 		//obtenerUsuarios(usuarioConexion);
@@ -63,5 +65,10 @@ public class UsuarioTest {
 		usuarioConexion = new UsuarioController();
 		System.out.println(usuarioConexion.eliminarUsuario(usuario));
 	}	
-	
+	public static void realizarLogin(UsuarioController usuarioConexion) {
+		usuarioConexion = new UsuarioController();
+		Usuario usuario = new Usuario("Alexander1", "7781");
+		System.out.println("SE ENCUENTRA: "+usuarioConexion.realizarLogin(usuario));
+		
+	}
 }

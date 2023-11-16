@@ -98,4 +98,28 @@ public class UsuarioDao {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
+	
+	public Boolean realizarLogin(Usuario usuario) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("SELECT 1 FROM USUARIOS WHERE USUARIO = ? AND PASS = ?;");
+			
+			statement.setString(1, usuario.getUsuario());
+			statement.setString(2, usuario.getPass());
+			
+			statement.execute();
+			
+			ResultSet resulSet = statement.getResultSet();
+			
+			try(resulSet){
+				if(resulSet.next()) {
+					return true;
+				}
+			}
+		
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		
+		return false;
+	}
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
 
 import Model.Huesped;
+import Model.Usuario;
 
 public class HuespedDao {
 	
@@ -67,5 +68,4 @@ public class HuespedDao {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
-	
 }
