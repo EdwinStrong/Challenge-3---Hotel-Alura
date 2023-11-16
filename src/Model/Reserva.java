@@ -1,11 +1,12 @@
 package Model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Reserva {
 	Integer id;
-	Date fechaEntrada;
-	Date fechaSalida;
+	Timestamp fechaEntrada;
+	Timestamp fechaSalida;
 	Double valor;
 	String formaPago;
 	
@@ -13,7 +14,7 @@ public class Reserva {
 		super();
 	}
 	
-	public Reserva(Integer id, Date fechaEntrada, Date fechaSalida, Double valor, String formaPago) {
+	public Reserva(Integer id, Timestamp fechaEntrada, Timestamp fechaSalida, Double valor, String formaPago) {
 		super();
 		this.id = id;
 		this.fechaEntrada = fechaEntrada;
@@ -28,19 +29,19 @@ public class Reserva {
 		return id;
 	}
 
-	public Date getFechaEntrada() {
+	public Timestamp getFechaEntrada() {
 		return fechaEntrada;
 	}
 
-	public void setFechaEntrada(Date fechaEntrada) {
+	public void setFechaEntrada(Timestamp fechaEntrada) {
 		this.fechaEntrada = fechaEntrada;
 	}
 
-	public Date getFechaSalida() {
+	public Timestamp getFechaSalida() {
 		return fechaSalida;
 	}
 
-	public void setFechaSalida(Date fechaSalida) {
+	public void setFechaSalida(Timestamp fechaSalida) {
 		this.fechaSalida = fechaSalida;
 	}
 

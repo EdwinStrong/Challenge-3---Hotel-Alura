@@ -30,7 +30,7 @@ public class UsuarioDao {
 			
 			try(resulSet){
 				while(resulSet.next()) {
-					System.out.println("REGISTRADO USUARIO: "+resulSet.getString(0));
+					System.out.println("REGISTRADO USUARIO: "+resulSet.getString(1));
 				}
 			}
 			

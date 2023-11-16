@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 
 /**
@@ -10,7 +10,7 @@ public class Huesped {
 	Integer id;
 	String nombre;
 	String apellido;
-	Date nacimiento;
+	Timestamp nacimiento;
 	String nacionalidad;
 	String telefono;
 	Integer idReserva;
@@ -20,7 +20,7 @@ public class Huesped {
 		
 	}
 	
-	public Huesped(Integer id, String nombre, String apellido, Date nacimiento, String nacionalidad, String telefono,
+	public Huesped(Integer id, String nombre, String apellido, Timestamp nacimiento, String nacionalidad, String telefono,
 			Integer idReserva) {
 		super();
 		this.id = id;
@@ -53,11 +53,11 @@ public class Huesped {
 		this.apellido = apellido;
 	}
 
-	public Date getNacimiento() {
+	public Timestamp getNacimiento() {
 		return nacimiento;
 	}
 
-	public void setNacimiento(Date nacimiento) {
+	public void setNacimiento(Timestamp nacimiento) {
 		this.nacimiento = nacimiento;
 	}
 
