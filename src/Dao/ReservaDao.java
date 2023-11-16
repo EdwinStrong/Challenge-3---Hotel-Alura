@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;import org.hibernate.internal.ExceptionConverterImpl;
+import java.util.List;
 
 import Model.Reserva;
 
@@ -33,7 +33,7 @@ public class ReservaDao {
 			
 			try(resulSet){
 				while(resulSet.next()) {
-					System.out.println("Registrado huesped con id: " + resulSet.getInt(1));
+					System.out.println("Registrado reserva con id: " + resulSet.getInt(1));
 				}
 			}
 		}catch(Exception e) {
@@ -67,21 +67,16 @@ public class ReservaDao {
 	
 	public Boolean buscarPorId(Integer id) {
 		try(con){
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM RESERVAS WHERE id = ?;");
+			PreparedStatement statement = con.prepareStatement("SELECT 1 FROM RESERVAS WHERE id = ?;");
+			
 			statement.setInt(1, id);
 			
 			statement.execute();
 			
 			final ResultSet resultSet = statement.getResultSet();
-			Boolean seEncuentra = false;
 			
-			try(resultSet){
-				while(resultSet.next()) {
-					//Si fue afectada una o más filas, se encuentra.
-					seEncuentra = true;;
-				}
-				return seEncuentra;
-			}
+			return resultSet.next();
+			
 		}catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
