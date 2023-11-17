@@ -74,7 +74,7 @@ public class HuespedDao {
 	public Integer modificarHuesped(Integer id, Huesped nuevoHuesped) {
 		try(con){
 			PreparedStatement statement = con.prepareStatement("UPDATE HUESPEDES SET NOMBRE = ?, APELLIDO = ?, NACIMIENTO = ?, "
-					+ "NACIONALIDAD = ?, TELEFONO = ?, ID_RESERVA = ?;");
+					+ "NACIONALIDAD = ?, TELEFONO = ?, ID_RESERVA = ? WHERE ID = ?;");
 			
 			statement.setString(1, nuevoHuesped.getNombre());
 			statement.setString(2, nuevoHuesped.getApellido());
@@ -82,7 +82,8 @@ public class HuespedDao {
 			statement.setString(4, nuevoHuesped.getNacionalidad());
 			statement.setString(5, nuevoHuesped.getTelefono());
 			statement.setInt(6, nuevoHuesped.getIdReserva());
-			
+			statement.setInt(7, id);
+
 			statement.execute();
 			
 			return statement.getUpdateCount();	
