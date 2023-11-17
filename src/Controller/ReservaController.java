@@ -26,8 +26,18 @@ public class ReservaController {
 		return reservaDao.obtenerReservas();
 	}
 	
-	public boolean buscarPorId(Integer id) {
+	public Reserva buscarPorId(Integer id) {
 		reservaDao = new ReservaDao(connectionFactory.recuperaConexion());
 		return reservaDao.buscarPorId(id);
+	}
+	
+	public Boolean existeId(Integer id) {
+		reservaDao = new ReservaDao(connectionFactory.recuperaConexion());
+		
+		if(reservaDao.buscarPorId(id) != null) {
+			return true;
+		}
+		
+		return false;
 	}
 }

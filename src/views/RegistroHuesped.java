@@ -286,11 +286,15 @@ public class RegistroHuesped extends JFrame {
 					int indiceHuesped = huespedController.registrarHuesped(huesped);
 					
 					if(indiceHuesped != 0) {
-						JOptionPane.showMessageDialog(null, 
+						/*JOptionPane.showMessageDialog(null, 
 								"Huesped registrado, con id: " + indiceHuesped +
 								" y la reserva con código: " + ReservasView.indiceReserva,
 								"Huesped registrado con éxito", 
 								JOptionPane.INFORMATION_MESSAGE);
+						*/
+						Exito exito = new Exito();
+					
+						exito.setVisible(true);
 					}else {
 						JOptionPane.showMessageDialog(null, "El indice: " +indiceHuesped + " de la reserva, no se encuentra registrada.","Indice de reserva incorrecto.",JOptionPane.ERROR_MESSAGE);
 					}

@@ -66,9 +66,9 @@ public class ReservaDao {
 		}
 	}
 	
-	public Boolean buscarPorId(Integer id) {
+	public Reserva buscarPorId(Integer id) {
 		try(con){
-			PreparedStatement statement = con.prepareStatement("SELECT 1 FROM RESERVAS WHERE id = ?;");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM RESERVAS WHERE id = ?;");
 			
 			statement.setInt(1, id);
 			
@@ -76,8 +76,16 @@ public class ReservaDao {
 			
 			final ResultSet resultSet = statement.getResultSet();
 			
-			return resultSet.next();
-			
+			try(resultSet){
+				if(resultSet.next()) {
+					System.out.println(new Reserva(resultSet.getInt(1), resultSet.getTimestamp(2), resultSet.getTimestamp(3),
+							resultSet.getDouble(4), resultSet.getString(5)));
+					return new Reserva(resultSet.getInt(1), resultSet.getTimestamp(2), resultSet.getTimestamp(3),
+							resultSet.getDouble(4), resultSet.getString(5));
+				}
+				return null;
+			}
+					
 		}catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
