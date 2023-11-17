@@ -34,4 +34,15 @@ public class HuespedController {
 		return huespedDao.obtenerHuespedes();
 	}
 	
+	public Integer modificarHuesped(Integer id, Huesped nuevoHuesped) {
+		huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
+		
+		return huespedDao.modificarHuesped(id, nuevoHuesped);
+	}
+	
+	public Integer eliminarHuesped(Integer id) {
+		huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
+		
+		return huespedDao.eliminarHuesped(id);
+	}
 }

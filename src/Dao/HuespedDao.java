@@ -70,4 +70,40 @@ public class HuespedDao {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
+	
+	public Integer modificarHuesped(Integer id, Huesped nuevoHuesped) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("UPDATE HUESPEDES SET NOMBRE = ?, APELLIDO = ?, NACIMIENTO = ?, "
+					+ "NACIONALIDAD = ?, TELEFONO = ?, ID_RESERVA = ?;");
+			
+			statement.setString(1, nuevoHuesped.getNombre());
+			statement.setString(2, nuevoHuesped.getApellido());
+			statement.setTimestamp(3, nuevoHuesped.getNacimiento());
+			statement.setString(4, nuevoHuesped.getNacionalidad());
+			statement.setString(5, nuevoHuesped.getTelefono());
+			statement.setInt(6, nuevoHuesped.getIdReserva());
+			
+			statement.execute();
+			
+			return statement.getUpdateCount();	
+			
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
+	public Integer eliminarHuesped(Integer id) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("DELETE FROM HUESPEDES WHERE ID = ?;");
+			
+			statement.setInt(1, id);
+			
+			statement.execute();
+			
+			return statement.getUpdateCount();
+			
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
 }
