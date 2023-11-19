@@ -8,6 +8,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
+
 import Model.Reserva;
 
 public class ReservaDao {
@@ -86,6 +88,41 @@ public class ReservaDao {
 				return null;
 			}
 					
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
+	public Integer modificarReserva(Integer id, Reserva reserva) {
+		try(con){
+			PreparedStatement statement = con.prepareStatement("UPDATE RESERVAS SET fecha_entrada = ?, fecha_salida = ?, "
+					+ "valor = ?, forma_pago = ? WHERE ID = ?");
+			
+			statement.setTimestamp(1, reserva.getFechaEntrada());
+			statement.setTimestamp(2, reserva.getFechaSalida());
+			statement.setDouble(3, reserva.getValor());
+			statement.setString(4, reserva.getFormaPago());
+			statement.setInt(5, id);
+			
+			statement.execute();
+			
+			//Las filas modificadas.
+			return statement.getUpdateCount();
+		}catch(Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
+	public Integer eliminarReserva(Integer id) {
+		try(con){
+			
+			PreparedStatement statement = con.prepareStatement("DELETE FROM RESERVAS WHERE ID = ?");
+			
+			statement.setInt(1, id);
+			
+			statement.execute();
+			
+			return statement.getUpdateCount();
 		}catch(Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}

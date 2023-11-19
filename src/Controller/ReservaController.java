@@ -40,4 +40,15 @@ public class ReservaController {
 		
 		return false;
 	}
+	
+	public Integer modificarReserva(Integer id, Reserva reserva) {
+		reservaDao = new ReservaDao(connectionFactory.recuperaConexion());
+		return reservaDao.modificarReserva(id, reserva);
+	}
+	
+	public Integer eliminarReserva(Integer id) {
+		reservaDao = new ReservaDao(connectionFactory.recuperaConexion());
+		
+		return reservaDao.eliminarReserva(id);
+	}
 }

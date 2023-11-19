@@ -146,15 +146,19 @@ public class Busqueda extends JFrame {
 				
 				if(seleccionadaTablaReserva) {
 					//Cuando cambia de columna
-					System.out.println("Tabla Huespedes cambio seleccion");
+					System.out.println("Tabla Reservas cambio seleccion");
 					//Indice de la fila seleccionada
-					Integer seleccionadaFila = tbReservas.getSelectedRow();
+					seleccionadaFila = tbReservas.getSelectedRow();
 
 					System.out.println("Fila: " + seleccionadaFila);
-					//El Id de esa columna
-					idTablaReserva = (Integer) tbReservas.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
+					
+					if(seleccionadaFila > 0) {
+						//El Id de esa columna
+						idTablaReserva = (Integer) tbReservas.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
 
-					System.out.println("El id es: " + idTablaReserva);//Id usado para liminar
+						System.out.println("El id es: " + idTablaReserva);//Id usado para liminar
+					}
+					
 				}
 				
 			}
@@ -380,6 +384,23 @@ public class Busqueda extends JFrame {
 				}
 				else if(seleccionadaTablaReserva) {
 					System.out.println("El indice a modificar de reserva es: " + idTablaReserva);
+					
+					ReservaController reservaController = new ReservaController();
+					
+					System.out.println("La fila es: " + seleccionadaFila);
+					
+					Reserva nuevaReserva = new Reserva(Timestamp.valueOf(tbReservas.getValueAt(seleccionadaFila, 1).toString()),
+							Timestamp.valueOf(tbReservas.getValueAt(seleccionadaFila, 2).toString()),
+							Double.valueOf(tbReservas.getValueAt(seleccionadaFila, 3).toString()),
+							tbReservas.getValueAt(seleccionadaFila, 4).toString()
+							);
+					
+					System.out.println("La reserva es: " + nuevaReserva);
+					
+					JOptionPane.showMessageDialog(null, "Se modificó la reserva con el indice: " + idTablaReserva, reservaController.modificarReserva(idTablaReserva, nuevaReserva) + " celda afectada.",
+							JOptionPane.INFORMATION_MESSAGE);
+					
+					mostrarReservas(modelo);
 				}
 				else {
 					System.out.println("Ninguna tabla seleccionada.");
@@ -417,6 +438,15 @@ public class Busqueda extends JFrame {
 				}
 				else if(seleccionadaTablaReserva) {
 					System.out.println("El indice a modificar de reserva es: " + idTablaReserva);
+					
+					ReservaController reservaController = new ReservaController();
+
+					//idTablaHuesped = (Integer) tbHuespedes.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
+
+					JOptionPane.showMessageDialog(null, "Se Eliminó la reserva con el indice: " + idTablaReserva, reservaController.eliminarReserva(idTablaReserva) + " celda afectada.",
+							JOptionPane.INFORMATION_MESSAGE);
+					
+					mostrarReservas(modelo);
 				}
 				else {
 					System.out.println("Ninguna tabla seleccionada.");
@@ -448,6 +478,8 @@ public class Busqueda extends JFrame {
 	}
 
 	public void mostrarReservas(DefaultTableModel modelReserva) {
+
+		limpiarTabla(modelReserva);
 
 		//Conexion a bd
 		ReservaController reservaController = new ReservaController();
