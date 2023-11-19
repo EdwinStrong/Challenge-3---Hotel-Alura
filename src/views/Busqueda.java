@@ -114,12 +114,12 @@ public class Busqueda extends JFrame {
 		panel.setBounds(20, 169, 865, 328);
 		contentPane.add(panel);
 
-		
+
 		/*
 		 * ---------------TABLA DE RESERVA---------------------
 		 * */
-		
-		
+
+
 		tbReservas = new JTable();
 		tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbReservas.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -135,16 +135,16 @@ public class Busqueda extends JFrame {
 
 		//Agregar datos
 		mostrarReservas(modelo);
-		
+
 		//
 		tbReservas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
+
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
+
+				tablaReservaSeleccionada();
 				
 				if(seleccionadaTablaReserva) {
-					tablaReservaSeleccionada();
-					
 					//Cuando cambia de columna
 					System.out.println("Tabla Huespedes cambio seleccion");
 					//Indice de la fila seleccionada
@@ -153,18 +153,19 @@ public class Busqueda extends JFrame {
 					System.out.println("Fila: " + seleccionadaFila);
 					//El Id de esa columna
 					idTablaReserva = (Integer) tbReservas.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
-					
+
 					System.out.println("El id es: " + idTablaReserva);//Id usado para liminar
 				}
+				
 			}
 		});
 
-		
+
 		/*
 		 * -------------------TABLA DE HUESPEDES-------------------------
 		 */
-		
-		
+
+
 		tbHuespedes = new JTable();
 		tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbHuespedes.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -182,31 +183,34 @@ public class Busqueda extends JFrame {
 
 		//Llenar la tabla de huespedes con los registros de la BD
 		mostrarHuesedes(modeloHuesped);
-		
+
 		//Para editar
 		tbHuespedes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
+
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				
-				if(!seleccionadaTablaHuesped) {
-					tablaHuespedSeleccionada();
-					
+
+				tablaHuespedSeleccionada();
+
+				if(seleccionadaTablaHuesped) {
 					//Cuando cambia de columna
 					System.out.println("Tabla Huespedes cambio seleccion");
 					//Indice de la fila seleccionada
 					seleccionadaFila = tbHuespedes.getSelectedRow();
 
 					System.out.println("Fila: " + seleccionadaFila);
-					//El Id de esa columna
-					idTablaHuesped = (Integer) tbHuespedes.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
 					
-					System.out.println("El id es: "+idTablaHuesped);//Id usado para modificar o eliminar
+					if(seleccionadaFila > 0) {
+						//El Id de esa columna
+						idTablaHuesped = (Integer) tbHuespedes.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
+
+						System.out.println("El id es: "+idTablaHuesped);//Id usado para modificar o eliminar}
+					}
+					
 				}
-				
 			}
 		});
-		
+
 		/*
 		 * ---------------------------------------------------------------------------
 		 */
@@ -302,7 +306,7 @@ public class Busqueda extends JFrame {
 		contentPane.add(separator_1_2);
 
 		JPanel btnbuscar = new JPanel();
-		
+
 		/**
 		 * ------------------------------ BOTON DE BUSCAR -----------------------------------------
 		 */
@@ -347,20 +351,18 @@ public class Busqueda extends JFrame {
 		contentPane.add(btnEditar);
 
 		JLabel lblEditar = new JLabel("EDITAR");
-		
+
 		/**
 		 * --------------------------------------------------- BOTON DE MODIFICAR SEGUN LA SELECCION ---------------------------------------------------
 		 */
 		lblEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+
 				if(seleccionadaTablaHuesped) {//Tabla huesped
-					
+
 					HuespedController huespedController = new HuespedController();
-					
-					System.out.println("El indice a modificar de huesped es: " + idTablaHuesped);
-					
+
 					//idTablaHuesped = (Integer) tbHuespedes.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
 					Huesped nuevoHuesped = new Huesped(tbHuespedes.getValueAt(seleccionadaFila, 1).toString(), 
 							tbHuespedes.getValueAt(seleccionadaFila, 2).toString(), 
@@ -370,8 +372,8 @@ public class Busqueda extends JFrame {
 							Integer.valueOf(tbHuespedes.getValueAt(seleccionadaFila, 6).toString())
 							);
 					System.out.println(nuevoHuesped);
-					
-					JOptionPane.showMessageDialog(null, "Se modificó el huesped.", huespedController.modificarHuesped(idTablaHuesped, nuevoHuesped) + " celda afectada.",
+
+					JOptionPane.showMessageDialog(null, "Se modificó el huesped con el indice: " + idTablaHuesped, huespedController.modificarHuesped(idTablaHuesped, nuevoHuesped) + " celda afectada.",
 							JOptionPane.INFORMATION_MESSAGE);
 					
 					mostrarHuesedes(modeloHuesped);
@@ -397,7 +399,30 @@ public class Busqueda extends JFrame {
 		btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		contentPane.add(btnEliminar);
 
+		/*---------------------------------------------------------BOTON DE ELIMINAR-------------------------------------------*/
 		JLabel lblEliminar = new JLabel("ELIMINAR");
+		lblEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(seleccionadaTablaHuesped) {//Tabla huesped
+
+					HuespedController huespedController = new HuespedController();
+
+					//idTablaHuesped = (Integer) tbHuespedes.getValueAt(seleccionadaFila, 0);//Seleccionar siempre la primer columna
+
+					JOptionPane.showMessageDialog(null, "Se Eliminó el huesped con el indice: " + idTablaHuesped, huespedController.eliminarHuesped(idTablaHuesped) + " celda afectada.",
+							JOptionPane.INFORMATION_MESSAGE);
+					
+					mostrarHuesedes(modeloHuesped);
+				}
+				else if(seleccionadaTablaReserva) {
+					System.out.println("El indice a modificar de reserva es: " + idTablaReserva);
+				}
+				else {
+					System.out.println("Ninguna tabla seleccionada.");
+				}
+			}
+		});
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEliminar.setForeground(Color.WHITE);
 		lblEliminar.setFont(new Font("Roboto", Font.PLAIN, 18));
@@ -413,7 +438,7 @@ public class Busqueda extends JFrame {
 		seleccionadaTablaHuesped = true;
 		seleccionadaTablaReserva = false;
 	}
-	
+
 	/**
 	 * Este método indica que la tabla de reservas ha sido seleccionada.
 	 */
@@ -421,7 +446,7 @@ public class Busqueda extends JFrame {
 		seleccionadaTablaHuesped = false;
 		seleccionadaTablaReserva = true;
 	}
-	
+
 	public void mostrarReservas(DefaultTableModel modelReserva) {
 
 		//Conexion a bd
@@ -434,11 +459,11 @@ public class Busqueda extends JFrame {
 			imprimirReserva(reserva, modelReserva);
 		});
 	}
-	
+
 	public void mostrarHuesedes(DefaultTableModel modelHuesped) {
 
 		limpiarTabla(modelHuesped);
-		
+
 		seleccionadaTablaHuesped = false;
 		seleccionadaTablaReserva = false;
 		//Conexion a bd
@@ -483,7 +508,7 @@ public class Busqueda extends JFrame {
 		row.add(reserva.getFormaPago());
 		modelReserva.addRow(row);
 	}
-	
+
 	/**
 	 * Se encarga de imprimir los huespedes en la tabla
 	 * @param huesped son los datos del huped a imprimir
@@ -501,7 +526,7 @@ public class Busqueda extends JFrame {
 
 		modelReserva.addRow(row);
 	}
-	
+
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	private void headerMousePressed(java.awt.event.MouseEvent evt) {
 		xMouse = evt.getX();
