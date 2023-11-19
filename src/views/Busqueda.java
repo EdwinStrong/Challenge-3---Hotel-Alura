@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -16,20 +18,15 @@ import Model.Reserva;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.Event;
-import java.awt.SystemColor;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
 import javax.swing.SwingConstants;
@@ -39,9 +36,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -59,11 +53,11 @@ public class Busqueda extends JFrame {
 	//Variables de apoyo para el id a modificar y eliminar
 	Integer idTablaHuesped = null;
 	Integer idTablaReserva = null;
-	//Permite saber de cuál tabla se quiere modificar o elminar
-	Boolean seleccionadaTablaHuesped = false;
-	Boolean seleccionadaTablaReserva = false;
 	//Fila seleccionada
 	Integer seleccionadaFila = null;
+	//Identificar selección en el menu
+	String tablaActiva = "";
+	
 	/**
 	 * Launch the application.
 	 */
@@ -114,6 +108,24 @@ public class Busqueda extends JFrame {
 		panel.setBounds(20, 169, 865, 328);
 		contentPane.add(panel);
 
+		/**
+		 * ----------------------------------------IDENTIFICAR LA TABLA SELECCIONADA------------------------------------
+		 */
+		
+		panel.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				// TODO Auto-generated method stub
+				JTabbedPane sourceTabbedPane = (JTabbedPane) e.getSource();
+				
+				int index = sourceTabbedPane.getSelectedIndex();
+				
+				tablaActiva = sourceTabbedPane.getTitleAt(index);
+				
+				System.out.println("Cambiado a: " + tablaActiva);
+			}
+		});
 
 		/*
 		 * ---------------TABLA DE RESERVA---------------------
@@ -136,15 +148,15 @@ public class Busqueda extends JFrame {
 		//Agregar datos
 		mostrarReservas(modelo);
 
-		//
+		/**
+		 * 
+		 */
 		tbReservas.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
-				tablaReservaSeleccionada();
-				
-				if(seleccionadaTablaReserva) {
+				if(tablaReservaSeleccionada()) {
 					//Cuando cambia de columna
 					System.out.println("Tabla Reservas cambio seleccion");
 					//Indice de la fila seleccionada
@@ -186,7 +198,7 @@ public class Busqueda extends JFrame {
 		scroll_tableHuespedes.setVisible(true);
 
 		//Llenar la tabla de huespedes con los registros de la BD
-		mostrarHuesedes(modeloHuesped);
+		mostrarHuespedes(modeloHuesped);
 
 		//Para editar
 		tbHuespedes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -194,9 +206,7 @@ public class Busqueda extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 
-				tablaHuespedSeleccionada();
-
-				if(seleccionadaTablaHuesped) {
+				if(tablaHuespedSeleccionada()) {
 					//Cuando cambia de columna
 					System.out.println("Tabla Huespedes cambio seleccion");
 					//Indice de la fila seleccionada
@@ -214,7 +224,6 @@ public class Busqueda extends JFrame {
 				}
 			}
 		});
-
 		/*
 		 * ---------------------------------------------------------------------------
 		 */
@@ -318,19 +327,34 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					limpiarTabla(modelo);
-
+					
 					Integer idBuscado = Integer.parseInt(txtBuscar.getText());
+					
+					if (tablaActiva.equals("Reservas")) {
+						limpiarTabla(modelo);
 
-					if(!buscarPorId(modelo, idBuscado)){
-						JOptionPane.showMessageDialog(null, "id no encontrado. ", "NOT FOUND", JOptionPane.INFORMATION_MESSAGE);
-						mostrarReservas(modelo);
+						if(!buscarReservaPorId(modelo, idBuscado)){
+							JOptionPane.showMessageDialog(null, "id de reserva no encontrado. ", "NOT FOUND", JOptionPane.INFORMATION_MESSAGE);
+							mostrarReservas(modelo);
+						}
 					}
-
+					
+					else{
+						
+						limpiarTabla(modeloHuesped);
+						
+						if(!buscarHuespedPorId(modeloHuesped, idBuscado)){
+							JOptionPane.showMessageDialog(null, "id de huesped no encontrado. ", "NOT FOUND", JOptionPane.INFORMATION_MESSAGE);
+							mostrarHuespedes(modeloHuesped);
+						}
+					}
+					
 				}catch(Exception e1) {
-					System.out.println(e1.getStackTrace());
-
+					
+					System.out.println("ERROR EN BUSCAR"+e1.getMessage());
+					
 					mostrarReservas(modelo);
+					mostrarHuespedes(modeloHuesped);
 				}
 			}
 		});
@@ -363,7 +387,7 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 
-				if(seleccionadaTablaHuesped) {//Tabla huesped
+				if(tablaHuespedSeleccionada()) {//Tabla huesped
 
 					HuespedController huespedController = new HuespedController();
 
@@ -380,9 +404,9 @@ public class Busqueda extends JFrame {
 					JOptionPane.showMessageDialog(null, "Se modificó el huesped con el indice: " + idTablaHuesped, huespedController.modificarHuesped(idTablaHuesped, nuevoHuesped) + " celda afectada.",
 							JOptionPane.INFORMATION_MESSAGE);
 					
-					mostrarHuesedes(modeloHuesped);
+					mostrarHuespedes(modeloHuesped);
 				}
-				else if(seleccionadaTablaReserva) {
+				else if(tablaReservaSeleccionada()) {
 					System.out.println("El indice a modificar de reserva es: " + idTablaReserva);
 					
 					ReservaController reservaController = new ReservaController();
@@ -425,7 +449,7 @@ public class Busqueda extends JFrame {
 		lblEliminar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(seleccionadaTablaHuesped) {//Tabla huesped
+				if(tablaHuespedSeleccionada()) {//Tabla huesped
 
 					HuespedController huespedController = new HuespedController();
 
@@ -434,9 +458,9 @@ public class Busqueda extends JFrame {
 					JOptionPane.showMessageDialog(null, "Se Eliminó el huesped con el indice: " + idTablaHuesped, huespedController.eliminarHuesped(idTablaHuesped) + " celda afectada.",
 							JOptionPane.INFORMATION_MESSAGE);
 					
-					mostrarHuesedes(modeloHuesped);
+					mostrarHuespedes(modeloHuesped);
 				}
-				else if(seleccionadaTablaReserva) {
+				else if(tablaReservaSeleccionada()) {
 					System.out.println("El indice a modificar de reserva es: " + idTablaReserva);
 					
 					ReservaController reservaController = new ReservaController();
@@ -464,17 +488,15 @@ public class Busqueda extends JFrame {
 	/***
 	 * Este método indica que la tabla de huespedes ha sido seleccionada.
 	 */
-	public void tablaHuespedSeleccionada() {
-		seleccionadaTablaHuesped = true;
-		seleccionadaTablaReserva = false;
+	public Boolean tablaHuespedSeleccionada() {
+		return tablaActiva.equals("Huéspedes");
 	}
 
 	/**
 	 * Este método indica que la tabla de reservas ha sido seleccionada.
 	 */
-	public void tablaReservaSeleccionada() {
-		seleccionadaTablaHuesped = false;
-		seleccionadaTablaReserva = true;
+	public Boolean tablaReservaSeleccionada() {
+		return tablaActiva.equals("Reservas");
 	}
 
 	public void mostrarReservas(DefaultTableModel modelReserva) {
@@ -492,12 +514,10 @@ public class Busqueda extends JFrame {
 		});
 	}
 
-	public void mostrarHuesedes(DefaultTableModel modelHuesped) {
+	public void mostrarHuespedes(DefaultTableModel modelHuesped) {
 
 		limpiarTabla(modelHuesped);
-
-		seleccionadaTablaHuesped = false;
-		seleccionadaTablaReserva = false;
+		
 		//Conexion a bd
 		HuespedController reservaController = new HuespedController();
 
@@ -510,13 +530,26 @@ public class Busqueda extends JFrame {
 	}
 
 
-	public Boolean buscarPorId(DefaultTableModel modelReserva, Integer id) {
+	public Boolean buscarReservaPorId(DefaultTableModel modelReserva, Integer id) {
 		//Conexion a bd
 		ReservaController reservaController = new ReservaController();
 		Reserva reserva = reservaController.buscarPorId(id);
 
 		if(reserva != null) {
 			imprimirReserva(reserva, modelReserva);
+			return true;
+		}
+		return false;
+	}
+	
+	public Boolean buscarHuespedPorId(DefaultTableModel modelHuesped, Integer id) {
+		//Conexion a bd
+		HuespedController huespedController = new HuespedController();
+		
+		Huesped huesped = huespedController.buscarHuespedPorId(id);
+		
+		if(huesped != null) {//Si se encontro al huesped, retorna true
+			imprimirHuesped(huesped, modelHuesped);
 			return true;
 		}
 		return false;

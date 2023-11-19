@@ -8,8 +8,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
-
 import Model.Reserva;
 
 public class ReservaDao {
@@ -80,10 +78,11 @@ public class ReservaDao {
 			
 			try(resultSet){
 				if(resultSet.next()) {
-					System.out.println(new Reserva(resultSet.getInt(1), resultSet.getTimestamp(2), resultSet.getTimestamp(3),
-							resultSet.getDouble(4), resultSet.getString(5)));
-					return new Reserva(resultSet.getInt(1), resultSet.getTimestamp(2), resultSet.getTimestamp(3),
-							resultSet.getDouble(4), resultSet.getString(5));
+					return new Reserva(resultSet.getInt(1), 
+							resultSet.getTimestamp(2), 
+							resultSet.getTimestamp(3),
+							resultSet.getDouble(4), 
+							resultSet.getString(5));
 				}
 				return null;
 			}

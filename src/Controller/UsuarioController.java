@@ -1,6 +1,5 @@
 package Controller;
 
-import java.sql.Connection;
 import java.util.List;
 
 import Dao.UsuarioDao;

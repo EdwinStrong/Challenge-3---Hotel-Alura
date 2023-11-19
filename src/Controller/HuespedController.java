@@ -34,6 +34,12 @@ public class HuespedController {
 		return huespedDao.obtenerHuespedes();
 	}
 	
+	public Huesped buscarHuespedPorId(Integer id) {
+		huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
+		
+		return huespedDao.buscarPorId(id);
+	}
+	
 	public Integer modificarHuesped(Integer id, Huesped nuevoHuesped) {
 		huespedDao = new HuespedDao(connectionFactory.recuperaConexion());
 		

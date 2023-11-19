@@ -1,17 +1,12 @@
 package Dao;
 
-import java.awt.Taskbar.State;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
-
 import Model.Huesped;
-import Model.Usuario;
 
 public class HuespedDao {
 	
@@ -70,6 +65,37 @@ public class HuespedDao {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
+	
+	public Huesped buscarPorId(Integer id) {
+		
+		try(con){
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM HUESPEDES WHERE ID = ?;");
+			
+			statement.setInt(1, id);
+			
+			statement.execute();
+			
+			final ResultSet resultSet = statement.getResultSet();
+			
+			try(resultSet){
+				if(resultSet.next()) {
+					return new Huesped(resultSet.getInt(1),
+							resultSet.getString(2),
+							resultSet.getString(3),
+							resultSet.getTimestamp(4),
+							resultSet.getString(5),
+							resultSet.getString(6),
+							resultSet.getInt(7)
+							);
+				}
+				//Si no halla al huesped, retorna null
+				return null;
+			}
+		}catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+	
 	
 	public Integer modificarHuesped(Integer id, Huesped nuevoHuesped) {
 		try(con){
